@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cão Parceiro — Plano de adestramento em casa</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F2F6EF; --paper:#FFFFFF; --ink:#16302B; --muted:#566A63; --line:#D3E0D6;
+  --leaf:#2E7D57; --leaf-soft:#E1F0E6; --sun:#FFC83D; --sun-deep:#E0A400; --coral:#D9503A; --coral-soft:#FBE7E2;
+  --r:16px;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Poppins",system-ui,sans-serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:"Poppins",system-ui,sans-serif;line-height:1.1;margin:0;letter-spacing:-.01em}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--leaf);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- Quiz shell ---------- */
+.app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;padding:0 20px}
+.top{display:grid;grid-template-columns:40px 1fr 40px;align-items:center;padding:14px 0 8px}
+.back{width:40px;height:40px;border-radius:12px;border:0;background:var(--paper);cursor:pointer;display:grid;place-items:center}
+.back[hidden]{visibility:hidden;display:grid}
+.brand{display:flex;align-items:center;justify-content:center;gap:8px;font-family:"Poppins",system-ui,sans-serif;font-weight:800;font-size:19px}
+.brand svg{width:26px;height:26px}
+.prog{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px}
+.prog i{display:block;height:6px;border-radius:6px;background:var(--line);overflow:hidden}
+.prog i b{display:block;height:100%;width:0;background:var(--leaf);transition:width .35s ease}
+.sec-name{font-size:13px;font-weight:700;color:var(--muted);text-align:center;margin-top:8px;min-height:20px}
+.screen{flex:1;display:flex;flex-direction:column;padding:18px 0 24px}
+.screen.enter{animation:in .28s ease both}
+@keyframes in{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+.q-title{font-size:27px;font-weight:800;text-align:center}
+.q-sub{color:var(--muted);text-align:center;margin:8px 0 0}
+.opts{display:flex;flex-direction:column;gap:10px;margin-top:22px}
+.opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:15px 16px;background:var(--paper);border:1.5px solid var(--line);border-radius:var(--r);font-weight:700;cursor:pointer;transition:border-color .15s,background .15s}
+.opt:hover{border-color:#A9C4B3}
+.opt .box{flex:none;width:22px;height:22px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;margin-left:auto}
+.opt.multi .box{border-radius:7px}
+.opt[aria-pressed="true"]{border-color:var(--leaf);background:var(--leaf-soft)}
+.opt[aria-pressed="true"] .box{background:var(--leaf);border-color:var(--leaf)}
+.opt[aria-pressed="true"] .box::after{content:"";width:10px;height:6px;border:2.5px solid #fff;border-top:0;border-right:0;transform:rotate(-45deg) translate(1px,-1px)}
+.chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:22px}
+.chip{padding:10px 16px;border-radius:999px;border:1.5px solid var(--line);background:var(--paper);font-weight:700;cursor:pointer}
+.chip[aria-pressed="true"]{border-color:var(--leaf);background:var(--leaf);color:#fff}
+.field{width:100%;margin-top:28px;padding:16px 18px;font:inherit;font-size:20px;font-weight:700;border:1.5px solid var(--line);border-radius:var(--r);background:var(--paper);color:var(--ink)}
+.field:focus{border-color:var(--leaf);outline:none}
+.list{max-height:300px;overflow:auto;margin-top:10px;display:flex;flex-direction:column;gap:8px}
+.foot{position:sticky;bottom:0;padding:14px 0 18px;background:linear-gradient(transparent,var(--bg) 28%);margin-top:auto}
+.cta{display:block;width:100%;padding:17px 20px;border:0;border-radius:18px;background:var(--sun);box-shadow:0 4px 0 var(--sun-deep);font-family:"Poppins",system-ui,sans-serif;font-weight:800;font-size:20px;color:var(--ink);cursor:pointer;text-align:center;text-decoration:none;transition:transform .08s,box-shadow .08s}
+.cta:active{transform:translateY(3px);box-shadow:0 1px 0 var(--sun-deep)}
+.cta:disabled{background:#E7E3D2;box-shadow:0 4px 0 #D3CDB6;color:#8E8A78;cursor:not-allowed}
+.link{display:block;margin:12px auto 0;background:none;border:0;color:var(--leaf);font-weight:700;text-decoration:underline;cursor:pointer}
+
+/* scale */
+.statement{background:var(--paper);border-radius:22px;padding:26px 22px;margin-top:22px;text-align:center}
+.statement p{font-family:"Poppins",system-ui,sans-serif;font-size:24px;font-weight:700;line-height:1.2;margin:0}
+.statement small{display:block;color:var(--muted);margin-top:10px}
+.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:22px}
+.scale button{aspect-ratio:1;border-radius:50%;border:1.5px solid var(--line);background:var(--paper);font-weight:800;font-size:18px;cursor:pointer}
+.scale button[aria-pressed="true"]{background:var(--leaf);border-color:var(--leaf);color:#fff}
+.scale-legend{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-top:8px}
+
+/* interstitial */
+.inter{text-align:center;margin:auto 0}
+.inter .art{width:180px;height:180px;margin:0 auto 22px}
+.inter h2{font-size:30px}
+.inter p{color:var(--muted);font-size:17px;margin:12px auto 0;max-width:36ch}
+
+/* intro */
+.intro{text-align:center;padding-top:10px}
+.intro h1{font-size:36px;font-weight:800}
+.intro .art{width:220px;height:200px;margin:8px auto 4px}
+.intro p{color:var(--muted);font-size:17px;margin:12px auto 0;max-width:34ch}
+.legal{font-size:12.5px;color:var(--muted);text-align:center;margin:12px 0 0}
+.legal a{color:var(--muted)}
+.facts{display:flex;justify-content:center;gap:18px;margin-top:18px;font-size:14px;font-weight:700;color:var(--muted)}
+
+/* loader */
+.bars{display:flex;flex-direction:column;gap:16px;margin-top:26px}
+.bar-row{display:grid;grid-template-columns:1fr auto;gap:6px 10px;font-weight:700;font-size:15px}
+.bar-row .pct{color:var(--muted)}
+.bar-row .track{grid-column:1/-1;height:10px;border-radius:10px;background:var(--line);overflow:hidden}
+.bar-row .fill{height:100%;width:0;background:var(--leaf);border-radius:10px}
+.bar-row.wait{color:#9AAAA3}
+.tip{margin-top:28px;background:var(--paper);border-radius:var(--r);padding:16px 18px;font-size:15px}
+.tip b{display:block;font-family:"Poppins",system-ui,sans-serif;font-size:18px;margin-bottom:2px}
+.modal-bg{position:fixed;inset:0;background:rgba(22,48,43,.45);display:grid;place-items:center;padding:20px;z-index:20}
+.modal{background:var(--bg);border-radius:24px;padding:24px 20px;max-width:440px;width:100%}
+.modal h3{font-size:24px;text-align:center}
+
+/* dog tag — o elemento memorável */
+.tag-wrap{display:flex;justify-content:center;margin:18px 0 6px}
+.tag{position:relative;width:250px;padding:44px 22px 22px;background:linear-gradient(160deg,#FFD866,var(--sun) 55%,#F5B800);border-radius:26px 26px 110px 110px;text-align:center;box-shadow:0 6px 0 var(--sun-deep),0 18px 30px -18px rgba(22,48,43,.5)}
+.tag::before{content:"";position:absolute;top:14px;left:50%;width:18px;height:18px;margin-left:-9px;border-radius:50%;background:var(--bg);box-shadow:inset 0 2px 3px rgba(0,0,0,.25)}
+.tag::after{content:"";position:absolute;top:-16px;left:50%;width:30px;height:30px;margin-left:-15px;border-radius:50%;border:4px solid #A9B4B0}
+.tag .tname{font-family:"Poppins",system-ui,sans-serif;font-weight:800;font-size:40px;line-height:1;word-break:break-word}
+.tag .tline{font-weight:700;font-size:14px;margin-top:6px}
+.profile{background:var(--paper);border-radius:22px;padding:18px 20px;margin-top:18px}
+.profile dl{display:grid;grid-template-columns:auto 1fr;gap:8px 14px;margin:0}
+.profile dt{color:var(--muted);font-size:14px}
+.profile dd{margin:0;font-weight:700;font-size:15px}
+.level{display:flex;gap:6px;margin-top:4px}
+.level span{flex:1;height:8px;border-radius:8px;background:var(--line)}
+.level span.on{background:var(--coral)}
+
+/* ---------- Página de vendas ---------- */
+.sales{display:none}
+body.selling .app{display:none}
+body.selling .sales{display:block}
+.s-wrap{max-width:720px;margin:0 auto;padding:0 20px}
+.s-top{display:flex;align-items:center;justify-content:center;gap:8px;padding:16px 0;font-family:"Poppins",system-ui,sans-serif;font-weight:800;font-size:19px}
+.s-top svg{width:26px;height:26px}
+.hero{text-align:center;padding:10px 0 34px}
+.hero h1{font-size:clamp(34px,7vw,52px);font-weight:800}
+.hero p.lead{font-size:18px;color:var(--muted);max-width:40ch;margin:14px auto 0}
+.hero .cta{max-width:420px;margin:24px auto 0}
+.small-note{font-size:13.5px;color:var(--muted);text-align:center;margin-top:12px}
+section.block{padding:40px 0;border-top:1.5px solid var(--line)}
+section.block h2{font-size:clamp(28px,5.5vw,38px);font-weight:800}
+section.block > .s-wrap > p.intro-p{color:var(--muted);font-size:17px;margin:10px 0 0;max-width:56ch}
+.ba{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}
+.ba > div{border-radius:20px;padding:18px}
+.ba .now{background:var(--coral-soft)}
+.ba .then{background:var(--leaf-soft)}
+.ba h3{font-size:20px;margin-bottom:8px}
+.ba ul{margin:0;padding-left:18px}
+.ba li{margin:6px 0;font-weight:600}
+.steps{list-style:none;padding:0;margin:22px 0 0;display:grid;gap:12px;counter-reset:s}
+.steps li{counter-increment:s;display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:start;background:var(--paper);border-radius:20px;padding:16px}
+.steps li::before{content:counter(s);width:44px;height:44px;border-radius:50%;background:var(--leaf);color:#fff;display:grid;place-items:center;font-family:"Poppins",system-ui,sans-serif;font-weight:800;font-size:22px}
+.steps b{display:block;font-family:"Poppins",system-ui,sans-serif;font-size:19px}
+.steps span{color:var(--muted)}
+.mods{display:grid;gap:10px;margin-top:22px}
+.mod{display:flex;gap:14px;align-items:flex-start;background:var(--paper);border-radius:18px;padding:14px 16px;border:1.5px solid transparent}
+.mod.focus{border-color:var(--leaf)}
+.mod .wk{flex:none;font-family:"Poppins",system-ui,sans-serif;font-weight:800;color:var(--leaf);font-size:15px;min-width:74px}
+.mod b{display:block}
+.mod em{font-style:normal;color:var(--muted);font-size:14.5px}
+.bonus{margin-top:16px;background:var(--leaf);color:#fff;border-radius:20px;padding:18px 20px}
+.bonus b{font-family:"Poppins",system-ui,sans-serif;font-size:20px}
+.bonus ul{margin:8px 0 0;padding-left:18px}
+.tests{display:grid;gap:12px;margin-top:22px}
+.test{background:var(--paper);border-radius:20px;padding:18px}
+.test p{margin:0 0 8px;font-size:16.5px}
+.test small{color:var(--muted);font-weight:700}
+.placeholder{border:2px dashed var(--coral);background:var(--coral-soft);border-radius:20px;padding:18px;color:#7A2C1F;font-weight:600}
+.offer{background:var(--ink);color:#fff;border-radius:28px;padding:28px 22px;text-align:center;margin-top:22px}
+.offer h3{font-size:26px}
+.offer .from{color:#B9C9C2;text-decoration:line-through;margin-top:14px}
+.offer .price{font-family:"Poppins",system-ui,sans-serif;font-weight:800;font-size:54px;line-height:1;margin-top:4px;color:var(--sun)}
+.offer .inst{color:#DCE6E1;margin-top:6px;font-weight:700}
+.offer ul{text-align:left;max-width:360px;margin:18px auto 0;padding-left:20px;color:#E8F0EC}
+.offer li{margin:6px 0}
+.offer .cta{max-width:420px;margin:22px auto 0}
+.pay{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:14px}
+.pay span{font-size:13px;font-weight:800;border:1.5px solid #3F5B54;border-radius:8px;padding:4px 10px;color:#DCE6E1}
+.guarantee{display:grid;grid-template-columns:96px 1fr;gap:18px;align-items:center;margin-top:22px;background:var(--paper);border-radius:22px;padding:20px}
+.seal{width:96px;height:96px;border-radius:50%;background:var(--leaf);color:#fff;display:grid;place-items:center;text-align:center;font-family:"Poppins",system-ui,sans-serif;font-weight:800;line-height:1;font-size:15px}
+.seal strong{display:block;font-size:34px}
+.faq{margin-top:20px}
+.faq details{background:var(--paper);border-radius:16px;margin-bottom:10px;padding:0 18px}
+.faq summary{cursor:pointer;font-weight:800;padding:16px 0;list-style:none;display:flex;justify-content:space-between;gap:12px}
+.faq summary::after{content:"+";font-family:"Poppins",system-ui,sans-serif;font-size:22px;line-height:1;color:var(--leaf)}
+.faq details[open] summary::after{content:"–"}
+.faq p{margin:0 0 16px;color:var(--muted)}
+.final{text-align:center;padding:40px 20px 120px}
+.final h2{font-size:clamp(28px,6vw,40px)}
+.final .cta{max-width:420px;margin:20px auto 0}
+.sticky{position:fixed;left:0;right:0;bottom:0;padding:10px 16px calc(12px + env(safe-area-inset-bottom));background:rgba(242,246,239,.96);border-top:1.5px solid var(--line);display:none;z-index:10}
+.sticky .cta{max-width:480px;margin:0 auto;font-size:18px;padding:14px}
+body.selling .sticky.show{display:block}
+footer{text-align:center;font-size:13px;color:var(--muted);padding:0 20px 110px}
+@media (max-width:520px){.ba{grid-template-columns:1fr}.guarantee{grid-template-columns:1fr;text-align:center}.seal{margin:0 auto}}
+</style>
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1122969583974689');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1122969583974689&ev=PageView&noscript=1"/></noscript>
+<!-- Fim Meta Pixel -->
+</head>
+<body>
+
+<!-- ================== QUIZ ================== -->
+<div class="app" id="app">
+  <header>
+    <div class="top">
+      <button class="back" id="back" aria-label="Voltar" hidden>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><use href="#paw"/></svg><span class="brand-name"></span></div>
+      <span></span>
+    </div>
+    <div id="progWrap" hidden>
+      <div class="prog" id="prog"><i><b></b></i><i><b></b></i><i><b></b></i></div>
+      <div class="sec-name" id="secName"></div>
+    </div>
+  </header>
+  <main class="screen" id="screen" aria-live="polite"></main>
+</div>
+
+<!-- ================== PÁGINA DE VENDAS ================== -->
+<div class="sales" id="sales"></div>
+<div class="sticky" id="sticky"><a class="cta" id="stickyCta" href="#">Quero o plano</a></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="paw" viewBox="0 0 32 32"><g fill="#2E7D57"><ellipse cx="16" cy="21" rx="7.5" ry="6.5"/><ellipse cx="7" cy="13" rx="3.2" ry="4"/><ellipse cx="25" cy="13" rx="3.2" ry="4"/><ellipse cx="12" cy="7" rx="3" ry="3.8"/><ellipse cx="20" cy="7" rx="3" ry="3.8"/></g></symbol>
+  </defs>
+</svg>
+
+<script>
+/* =====================================================================
+   CONFIGURAÇÃO — edite aqui antes de colocar no ar
+   ===================================================================== */
+const CONFIG = {
+  marca: "Cão Parceiro",
+  produto: "Método Cão Parceiro",
+  checkoutUrl: "https://pay.cakto.com.br/35o6ui6_1330885",   // checkout Cakto
+  webhookUrl: "https://formsubmit.co/ajax/50e30b4256b94df3f9b6c0a8fd885722", // cada lead do quiz chega por e-mail
+  termosUrl: "termos.html",
+  privacidadeUrl: "privacidade.html",
+  preco: "R$ 19,90",              // preço (pagamento único)
+  parcelado: "Pagamento único · sem assinatura", // texto abaixo do preço
+  precoDe: "",                    // ex.: "R$ 197" — só use se esse preço já foi praticado de verdade
+  garantiaDias: 7,
+  suporteEmail: "reisdroplatamsuporte@gmail.com", // suporte por e-mail (vazio = não mostra)
+  alunos: "",                     // ex.: "3.200" — número REAL de alunos. Vazio = a frase não aparece
+  // Depoimentos REAIS, com autorização do aluno. Vazio = aparece um aviso para você preencher.
+  depoimentos: [
+    // { texto: "O Thor parou de puxar a guia na segunda semana.", autor: "Ana, tutora do Thor (SRD, 2 anos)" },
+  ],
+  headlines: {
+    1: "Ensine seu cachorro a fazer xixi no lugar certo, com 10 minutos por dia",
+    2: "Acabe com as mordidas do seu filhote sem gritar nem castigar",
+    3: "Passeie sem ser arrastado: um plano de treino para fazer em casa",
+    4: "Seu cachorro te ignora? Descubra o plano de treino certo para ele",
+    5: "Cachorro educado sem sair de casa, em 10 minutos por dia"
+  }
+};
+
+/* =====================================================================
+   Rastreamento — liga no Pixel do Meta / GTM se estiverem na página
+   ===================================================================== */
+function track(event, data){
+  try{ if(window.fbq) window.fbq('trackCustom', event, data||{}); }catch(e){}
+  try{ (window.dataLayer=window.dataLayer||[]).push(Object.assign({event:event}, data||{})); }catch(e){}
+}
+function fbStd(event, data){ try{ if(window.fbq) window.fbq('track', event, data||{}); }catch(e){} }
+const params = (()=>{ try{ return new URLSearchParams(location.search); }catch(e){ return new URLSearchParams(); } })();
+const UTM = {}; ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','fbclid'].forEach(k=>{ if(params.get(k)) UTM[k]=params.get(k); });
+
+/* =====================================================================
+   Estado e textos personalizados
+   ===================================================================== */
+const A = {};          // respostas
+const hist = [];       // telas visitadas, para o botão voltar
+let cur = 0;
+
+function fem(){ return A.sexo === 'Fêmea'; }
+function nome(){ return (A.nome||'').trim(); }
+function fill(s){
+  const n = nome(), f = fem();
+  return s
+    .replace(/\{onome\}/g, n ? (f?'a ':'o ')+n : (f?'sua cachorra':'seu cachorro'))
+    .replace(/\{Onome\}/g, n ? (f?'A ':'O ')+n : (f?'Sua cachorra':'Seu cachorro'))
+    .replace(/\{donome\}/g, n ? (f?'da ':'do ')+n : (f?'da sua cachorra':'do seu cachorro'))
+    .replace(/\{nome\}/g, n || (f?'sua cachorra':'seu cachorro'))
+    .replace(/\{ele\}/g, f?'ela':'ele')
+    .replace(/\{Ele\}/g, f?'Ela':'Ele');
+}
+const esc = s => String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+const SECS = ['Sobre seu cachorro','Comportamento','Treino'];
+const RACAS = ['Vira-lata (SRD)','Shih-tzu','Spitz alemão (Lulu da Pomerânia)','Yorkshire','Poodle','Lhasa Apso','Pinscher','Maltês','Golden Retriever','Labrador','Border Collie','Bulldog francês','Pug','Dachshund (salsicha)','Beagle','Pastor alemão','Rottweiler','Pit Bull','Husky siberiano','Chihuahua','Schnauzer','Boxer','Cocker spaniel','Pastor belga','Dálmata','Bulldog inglês','Akita','Chow chow','Jack Russell','Pequinês','Cane corso','Doberman','Bernese','Sem raça definida, porte pequeno','Sem raça definida, porte grande'];
+const EVENTOS = ['Mudança de casa','Bebê chegando','Viagem','Visitas em casa','Volta ao trabalho presencial'];
+
+/* =====================================================================
+   Roteiro do quiz
+   ===================================================================== */
+const STEPS = [
+  {id:'intro', type:'intro'},
+  // Etapa 1
+  {id:'sexo', sec:0, type:'single', title:'Seu cachorro é…', opts:['Macho','Fêmea']},
+  {id:'nome', sec:0, type:'text', title:'Como {ele} se chama?', sub:'Vamos usar o nome no plano de treino.', ph:'Nome', skip:'Prefiro não dizer'},
+  {id:'idade', sec:0, type:'single', title:'Quantos anos {onome} tem?', opts:['Filhote, até 6 meses','7 a 12 meses','1 a 2 anos','3 a 7 anos','8 anos ou mais']},
+  {id:'raca', sec:0, type:'search', title:'Qual a raça {donome}?', ph:'Buscar raça', skip:'Não sei a raça'},
+  {id:'saude', sec:0, type:'multi', title:'{Onome} tem algum problema de saúde?', sub:'Assim os exercícios respeitam o corpo {donome}.', opts:['Está saudável','Articulações ou coluna','Pele ou alergia','Dentes','Visão ou audição'], none:'Nenhum desses'},
+  {id:'i1', sec:0, type:'inter', art:'clock', title:'10 minutos por dia já fazem diferença', text:'Cachorros aprendem melhor com sessões curtas e frequentes, no lugar onde vivem. O plano {donome} vai ser montado assim.'},
+  // Etapa 2
+  {id:'xixi', sec:1, type:'multi', title:'Como está o xixi e o cocô {donome}?', opts:['Faz fora do lugar','Não segura à noite','Faz quando fica sozinho','Está tudo certo'], none:'Nenhuma dessas'},
+  {id:'objetivo', sec:1, type:'single', title:'Onde você quer que {ele} faça as necessidades?', opts:['Só na rua','Só no tapetinho','No tapetinho e depois na rua','Nos dois lugares','Isso não é um problema']},
+  {id:'casa', sec:1, type:'multi', title:'O que mais te incomoda dentro de casa?', opts:['Morde mãos e pés','Late demais','Destrói móveis e objetos','Chora quando fica sozinho','Pula nas visitas'], none:'Nenhum desses'},
+  {id:'stress', sec:1, type:'scale', title:'Você se identifica com esta frase?', statement:'“Fico estressado(a) quando {onome} apronta em casa.”'},
+  {id:'passeio', sec:1, type:'multi', title:'E no passeio, o que acontece?', opts:['Puxa a guia','Come coisas do chão','Late para outros cães','Late para pessoas','Ainda não passeia'], none:'Nada disso'},
+  {id:'energia', sec:1, type:'single', title:'Qual o nível de energia {donome}?', opts:['Muito agitado, não para quieto','Médio, descansa depois de brincar','Calmo, passa boa parte do dia deitado']},
+  {id:'i2', sec:1, type:'inter', art:'heart', title:'Você não está sozinho(a)', text:'Morder, latir e puxar a guia estão entre os motivos mais comuns para procurar adestramento. Isso não quer dizer que {onome} é difícil: {ele} só ainda não entendeu as regras da casa.'},
+  // Etapa 3
+  {id:'comandos', sec:2, type:'chips', title:'Quais comandos {onome} já sabe?', sub:'Marque só o que {ele} faz sempre que você pede.', opts:['Nome','Senta','Deita','Fica','Vem','Junto','Não','Solta','Dá a pata','Espera'], none:'Nenhum ainda'},
+  {id:'ignora', sec:2, type:'scale', title:'Você se identifica com esta frase?', statement:'“{Onome} costuma ignorar o que eu peço.”'},
+  {id:'motivo', sec:2, type:'multi', title:'Tem algum motivo para começar agora?', opts:EVENTOS.concat(['Chegou um cachorro novo','Só quero um cachorro educado']), none:'Nenhum em especial'},
+  {id:'data', sec:2, type:'date', when:()=> (A.motivo||[]).some(m=>EVENTOS.includes(m)), title:'Que legal! Quando vai ser?', dyn:true, skip:'Ainda não sei a data'},
+  {id:'tempo', sec:2, type:'single', title:'Quanto tempo por dia você consegue treinar?', opts:['5 a 10 minutos','10 a 20 minutos','20 a 30 minutos','Mais de 30 minutos']},
+  {id:'tentou', sec:2, type:'single', title:'Você já tentou treinar {onome}?', opts:['Sim, com adestrador','Sim, sozinho(a) com vídeos','Ainda não']},
+  {id:'idadeTutor', sec:2, type:'single', title:'E você, qual a sua idade?', sub:'Usamos isso para ajustar a linguagem do plano.', opts:['18 a 24','25 a 34','35 a 44','45 a 54','55 ou mais']},
+  {id:'vinculo', sec:2, type:'scale', title:'Você se identifica com esta frase?', statement:'“Quero um cachorro parceiro e aproveitar mais o tempo com {ele}.”'},
+  {id:'loader', type:'loader'},
+  {id:'result', type:'result'},
+  {id:'lead', type:'lead'}
+];
+
+/* =====================================================================
+   Plano personalizado
+   ===================================================================== */
+function problems(){
+  const out = [];
+  (A.xixi||[]).filter(x=>x!=='Está tudo certo').forEach(x=>out.push(x));
+  (A.casa||[]).forEach(x=>out.push(x));
+  (A.passeio||[]).forEach(x=>out.push(x));
+  return out;
+}
+const MODMAP = [
+  {k:'xixi', test:p=>['Faz fora do lugar','Não segura à noite','Faz quando fica sozinho'].includes(p), name:'Xixi e cocô no lugar certo', d:'Rotina de horários, local fixo e reforço na hora certa.'},
+  {k:'mordida', test:p=>p==='Morde mãos e pés', name:'Fim das mordidas', d:'Troca da mão pelo brinquedo e controle da empolgação.'},
+  {k:'guia', test:p=>p==='Puxa a guia', name:'Passeio sem puxar', d:'Andar junto, paradas e recompensa na posição certa.'},
+  {k:'latido', test:p=>['Late demais','Late para outros cães','Late para pessoas'].includes(p), name:'Latidos sob controle', d:'Descobrir o gatilho, ensinar o silêncio e redirecionar.'},
+  {k:'sozinho', test:p=>p==='Chora quando fica sozinho', name:'Ficar sozinho sem sofrer', d:'Saídas curtas e progressivas até {ele} ficar tranquilo.'},
+  {k:'destroi', test:p=>p==='Destrói móveis e objetos', name:'Roer só o que pode', d:'Enriquecimento ambiental e o que oferecer no lugar.'},
+  {k:'visitas', test:p=>p==='Pula nas visitas', name:'Educação com visitas', d:'Cumprimentar com as quatro patas no chão.'},
+  {k:'chao', test:p=>p==='Come coisas do chão', name:'Larga e deixa', d:'Os comandos que podem evitar um susto na rua.'},
+  {k:'primeiro', test:p=>p==='Ainda não passeia', name:'Primeiros passeios', d:'Guia, coleira e a rua sem medo.'}
+];
+function plan(){
+  const ps = problems(), mods = [];
+  MODMAP.forEach(m=>{ if(ps.some(m.test)) mods.push(m); });
+  const nCmd = (A.comandos||[]).length;
+  const extra = [
+    {k:'base', name:'Comandos básicos', d:'Senta, deita, fica e vem: a base de todo o resto.'},
+    {k:'calma', name:'Autocontrole e calma', d:'Esperar a comida, a porta e a guia sem pular.'}
+  ];
+  if((A.ignora||0)>=3 || nCmd<3) mods.push(extra[0]);
+  extra.forEach(e=>{ if(mods.length<3 && !mods.find(m=>m.k===e.k)) mods.push(e); });
+  const level = nCmd<=2 ? {n:'Iniciante', s:1} : nCmd<=5 ? {n:'Intermediário', s:2} : {n:'Avançado', s:3};
+  return {mods, level, nCmd, ps};
+}
+function fmtDate(iso){ if(!iso) return ''; const [y,m,d]=iso.split('-'); return d+'/'+m+'/'+y; }
+function weeksUntil(iso){ if(!iso) return null; const t=Date.parse(iso+'T12:00:00'); if(isNaN(t)) return null; return Math.round((t-Date.now())/864e5/7); }
+
+/* =====================================================================
+   Navegação
+   ===================================================================== */
+const $screen = document.getElementById('screen');
+function visible(i){ const s=STEPS[i]; return !s.when || s.when(); }
+function go(i, push=true){
+  if(push) hist.push(cur);
+  cur = i; render();
+  window.scrollTo(0,0);
+}
+function next(){
+  let i = cur+1; while(i<STEPS.length && !visible(i)) i++;
+  track('quiz_step_done', {step: STEPS[cur].id});
+  go(i);
+}
+document.getElementById('back').onclick = ()=>{ if(hist.length){ cur = hist.pop(); render(); } };
+
+function header(step){
+  const pw = document.getElementById('progWrap');
+  const back = document.getElementById('back');
+  back.hidden = !(hist.length && !['intro','loader','result','lead'].includes(step.id)) ;
+  if(step.sec===undefined){ pw.hidden = true; return; }
+  pw.hidden = false;
+  const bars = document.querySelectorAll('#prog b');
+  const inSec = STEPS.filter(s=>s.sec===step.sec);
+  const pos = inSec.indexOf(step)+1;
+  bars.forEach((b,i)=>{ b.style.width = i<step.sec ? '100%' : i===step.sec ? Math.max(8, pos/inSec.length*100)+'%' : '0'; });
+  document.getElementById('secName').textContent = SECS[step.sec];
+}
+
+function footer(label, enabled, onClick, link){
+  const f = document.createElement('div'); f.className='foot';
+  const b = document.createElement('button'); b.className='cta'; b.textContent = label; b.disabled = !enabled; b.onclick = onClick;
+  f.appendChild(b);
+  if(link){ const l=document.createElement('button'); l.className='link'; l.textContent=link.t; l.onclick=link.fn; f.appendChild(l); }
+  return {f,b};
+}
+
+function render(){
+  const s = STEPS[cur];
+  header(s);
+  $screen.className = 'screen'; void $screen.offsetWidth; $screen.className='screen enter';
+  $screen.innerHTML = '';
+  track('quiz_step_view', {step:s.id, index:cur});
+  ({intro:rIntro, single:rSingle, multi:rMulti, chips:rChips, text:rText, search:rSearch, scale:rScale, inter:rInter, date:rDate, loader:rLoader, result:rResult, lead:rLead})[s.type](s);
+}
+function title(s){
+  let h = `<h1 class="q-title">${esc(fill(s.title))}</h1>`;
+  if(s.sub) h += `<p class="q-sub">${esc(fill(s.sub))}</p>`;
+  return h;
+}
+
+/* ---------- tipos de tela ---------- */
+function rIntro(){
+  const h = CONFIG.headlines[params.get('h')] || CONFIG.headlines[5];
+  $screen.innerHTML = `
+    <div class="intro">
+      <div class="art">${artDog()}</div>
+      <h1>${esc(h)}</h1>
+      <p>Responda algumas perguntas e receba um plano de adestramento feito para o seu cachorro.</p>
+      <div class="facts"><span>Leva 2 minutos</span><span>Plano com o nome dele</span></div>
+    </div>`;
+  const {f} = footer('Começar o teste', true, ()=>{ track('quiz_start',{headline:params.get('h')||'5'}); next(); });
+  const legal = document.createElement('p'); legal.className='legal';
+  legal.innerHTML = `Ao começar, você concorda com os <a href="${CONFIG.termosUrl}">Termos de uso</a> e a <a href="${CONFIG.privacidadeUrl}">Política de privacidade</a>.`;
+  f.appendChild(legal);
+  $screen.appendChild(f);
+}
+function rSingle(s){
+  $screen.innerHTML = title(s) + `<div class="opts">${s.opts.map(o=>`<button class="opt" aria-pressed="${A[s.id]===o}">${esc(o)}<span class="box"></span></button>`).join('')}</div>`;
+  $screen.querySelectorAll('.opt').forEach((b,i)=>b.onclick=()=>{
+    A[s.id]=s.opts[i];
+    $screen.querySelectorAll('.opt').forEach(x=>x.setAttribute('aria-pressed', x===b));
+    setTimeout(next, 260);
+  });
+}
+function multiBase(s, cls, wrap){
+  const sel = new Set(A[s.id]||[]);
+  $screen.innerHTML = title(s) + `<div class="${wrap}">${s.opts.map(o=>`<button class="${cls}" aria-pressed="${sel.has(o)}">${esc(o)}${cls==='opt multi'?'<span class="box"></span>':''}</button>`).join('')}</div>`;
+  const {f,b} = footer('Continuar', sel.size>0, ()=>{ A[s.id]=[...sel]; next(); }, s.none ? {t:s.none, fn:()=>{ A[s.id]=[]; next(); }} : null);
+  $screen.querySelectorAll('.'+cls.split(' ')[0]).forEach((el,i)=>el.onclick=()=>{
+    const o=s.opts[i]; sel.has(o)?sel.delete(o):sel.add(o);
+    el.setAttribute('aria-pressed', sel.has(o)); b.disabled = sel.size===0;
+  });
+  $screen.appendChild(f);
+}
+function rMulti(s){ multiBase(s,'opt multi','opts'); }
+function rChips(s){ multiBase(s,'chip','chips'); }
+function rText(s){
+  $screen.innerHTML = title(s) + `<input class="field" id="tx" maxlength="20" autocomplete="off" placeholder="${esc(s.ph)}" value="${esc(A[s.id]||'')}">`;
+  const inp = document.getElementById('tx');
+  const done = ()=>{ A[s.id]=inp.value.trim(); next(); };
+  const {f,b} = footer('Continuar', !!inp.value.trim(), done, {t:s.skip, fn:()=>{ A[s.id]=''; next(); }});
+  inp.oninput = ()=> b.disabled = !inp.value.trim();
+  inp.onkeydown = e=>{ if(e.key==='Enter' && inp.value.trim()) done(); };
+  $screen.appendChild(f); setTimeout(()=>inp.focus(),50);
+}
+function rSearch(s){
+  $screen.innerHTML = title(s) + `<input class="field" id="q" autocomplete="off" placeholder="${esc(s.ph)}" value="${esc(A[s.id]||'')}"><div class="list" id="lst"></div>`;
+  const inp=document.getElementById('q'), lst=document.getElementById('lst');
+  const {f,b} = footer('Continuar', !!A[s.id], ()=>next(), {t:s.skip, fn:()=>{ A[s.id]='Não sei'; next(); }});
+  const norm = t=>t.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+  const draw = ()=>{
+    const q = norm(inp.value.trim());
+    const items = RACAS.filter(r=>!q || norm(r).includes(q)).slice(0,8);
+    lst.innerHTML = items.map(r=>`<button class="opt" aria-pressed="${A[s.id]===r}">${esc(r)}<span class="box"></span></button>`).join('');
+    lst.querySelectorAll('.opt').forEach((el,i)=>el.onclick=()=>{ A[s.id]=items[i]; inp.value=items[i]; b.disabled=false; draw(); });
+  };
+  inp.oninput = ()=>{ A[s.id]=''; b.disabled=true; draw(); };
+  draw(); $screen.appendChild(f);
+}
+function rScale(s){
+  const v = A[s.id]||0;
+  $screen.innerHTML = title(s) + `
+    <div class="statement"><p>${esc(fill(s.statement))}</p><small>Escolha de 1 a 5</small></div>
+    <div class="scale">${[1,2,3,4,5].map(n=>`<button aria-pressed="${v===n}" aria-label="${n} de 5">${n}</button>`).join('')}</div>
+    <div class="scale-legend"><span>Nada a ver comigo</span><span>Totalmente</span></div>`;
+  $screen.querySelectorAll('.scale button').forEach((b,i)=>b.onclick=()=>{
+    A[s.id]=i+1; $screen.querySelectorAll('.scale button').forEach(x=>x.setAttribute('aria-pressed', x===b));
+    setTimeout(next, 260);
+  });
+}
+function rInter(s){
+  $screen.innerHTML = `<div class="inter"><div class="art">${s.art==='clock'?artClock():artHeart()}</div><h2>${esc(fill(s.title))}</h2><p>${esc(fill(s.text))}</p></div>`;
+  $screen.appendChild(footer('Continuar', true, next).f);
+}
+function rDate(s){
+  const ev = (A.motivo||[]).find(m=>EVENTOS.includes(m)) || 'o evento';
+  const t = ({'Mudança de casa':'Que bom! Quando vai ser a mudança?','Bebê chegando':'Que notícia boa! Quando o bebê chega?','Viagem':'Boa! Quando é a viagem?','Visitas em casa':'Que legal! Quando chegam as visitas?','Volta ao trabalho presencial':'Quando você volta ao trabalho presencial?'})[ev] || s.title;
+  const today = new Date().toISOString().slice(0,10);
+  $screen.innerHTML = `<h1 class="q-title">${esc(t)}</h1><p class="q-sub">Vamos montar o plano para ${esc(fill('{onome}'))} estar pronto até lá.</p><input class="field" id="dt" type="date" min="${today}" value="${esc(A.data||'')}">`;
+  const inp=document.getElementById('dt');
+  const {f,b} = footer('Continuar', !!inp.value, ()=>{ A.data=inp.value; A.evento=ev; next(); }, {t:s.skip, fn:()=>{ A.data=''; A.evento=ev; next(); }});
+  inp.oninput = ()=> b.disabled = !inp.value;
+  $screen.appendChild(f);
+}
+function rLoader(){
+  const labels = ['Analisando o comportamento','Avaliando os comandos que '+fill('{ele}')+' já sabe','Ajustando os exercícios para '+(A.raca && A.raca!=='Não sei' ? A.raca.split(' (')[0].toLowerCase() : 'o porte e a idade'),'Montando o plano '+fill('{donome}')];
+  $screen.innerHTML = `<h1 class="q-title">Montando o plano ${esc(fill('{donome}'))}…</h1>
+    <div class="bars">${labels.map(l=>`<div class="bar-row wait"><span>${esc(l)}</span><span class="pct">0%</span><div class="track"><div class="fill"></div></div></div>`).join('')}</div>
+    <div class="tip"><b>Você sabia?</b>Recompensar o comportamento certo na hora em que ele acontece ensina mais rápido do que brigar depois.</div>`;
+  const rows=[...$screen.querySelectorAll('.bar-row')];
+  let k=0, p=0, asked=false, paused=false;
+  const tick=()=>{
+    if(paused) return;
+    const r=rows[k]; r.classList.remove('wait');
+    p+= 2 + Math.random()*3; if(p>100) p=100;
+    r.querySelector('.fill').style.width=p+'%'; r.querySelector('.pct').textContent=Math.round(p)+'%';
+    if(k===1 && p>=88 && !asked){ asked=true; paused=true; ask(()=>{ paused=false; setTimeout(tick,60); }); return; }
+    if(p>=100){ k++; p=0; if(k>=rows.length){ setTimeout(next,500); return; } }
+    setTimeout(tick, 70);
+  };
+  setTimeout(tick, 300);
+}
+function ask(done){
+  const opts=['Sim, eu amo!','Às vezes, quando dá','Menos do que eu gostaria','Hoje está mais difícil'];
+  const bg=document.createElement('div'); bg.className='modal-bg';
+  bg.innerHTML=`<div class="modal" role="dialog" aria-modal="true" aria-label="Pergunta"><h3>${esc(fill('Você curte passar tempo com {onome}?'))}</h3><div class="opts">${opts.map(o=>`<button class="opt">${esc(o)}<span class="box"></span></button>`).join('')}</div></div>`;
+  document.body.appendChild(bg);
+  bg.querySelectorAll('.opt').forEach((b,i)=>b.onclick=()=>{ A.tempoJuntos=opts[i]; b.setAttribute('aria-pressed','true'); setTimeout(()=>{ bg.remove(); done(); },220); });
+  setTimeout(()=>bg.querySelector('.opt').focus(),50);
+}
+function tagHTML(){
+  const n = nome() || (fem()?'Sua cachorra':'Seu cachorro');
+  const w = weeksUntil(A.data);
+  const line = A.data && w!==null && w>=1 ? 'Pronto até '+fmtDate(A.data) : 'Plano de 4 semanas';
+  return `<div class="tag-wrap"><div class="tag"><div class="tname">${esc(n)}</div><div class="tline">${esc(line)}</div></div></div>`;
+}
+function profileHTML(P){
+  const prob = P.ps.length ? P.ps.slice(0,4).join(', ') + (P.ps.length>4?' e mais '+(P.ps.length-4):'') : 'Nenhum grave, foco em obediência';
+  return `<div class="profile"><dl>
+    <dt>Idade</dt><dd>${esc(A.idade||'—')}</dd>
+    <dt>Raça</dt><dd>${esc(A.raca && A.raca!=='Não sei' ? A.raca : 'Não informada')}</dd>
+    <dt>Pontos a treinar</dt><dd>${esc(prob)}</dd>
+    <dt>Comandos que já sabe</dt><dd>${P.nCmd}</dd>
+    <dt>Nível atual</dt><dd>${P.level.n}<div class="level">${[1,2,3].map(i=>`<span class="${i<=P.level.s?'on':''}"></span>`).join('')}</div></dd>
+  </dl></div>`;
+}
+function rResult(){
+  const P = plan();
+  $screen.innerHTML = `<h1 class="q-title">${esc(fill('O plano {donome} está pronto'))}</h1>${tagHTML()}${profileHTML(P)}
+    <p class="q-sub" style="margin-top:18px">Foco das próximas semanas: <b style="color:var(--ink)">${esc(P.mods.slice(0,3).map(m=>m.name).join(', '))}</b>.</p>`;
+  $screen.appendChild(footer('Ver meu plano', true, ()=>{ track('quiz_result_continue'); next(); }).f);
+}
+function rLead(){
+  $screen.innerHTML = `<h1 class="q-title">${esc(fill('Para onde enviamos o resumo do plano {donome}?'))}</h1>
+    <form id="lf" novalidate>
+      <input class="field" id="em" type="email" inputmode="email" autocomplete="email" placeholder="Seu melhor e-mail" style="font-size:18px">
+      <input class="field" id="wa" type="tel" inputmode="tel" autocomplete="tel" placeholder="WhatsApp (opcional)" style="font-size:18px;margin-top:12px">
+      <p id="err" class="legal" style="color:var(--coral);font-weight:700;min-height:18px"></p>
+      <label class="legal" style="display:flex;gap:10px;align-items:flex-start;text-align:left;margin-top:4px">
+        <input type="checkbox" id="ok" style="margin-top:3px;width:18px;height:18px;accent-color:var(--leaf)">
+        <span>Aceito receber o resumo do plano e conteúdos de ${esc(CONFIG.marca)} por e-mail e WhatsApp. Posso cancelar quando quiser. Veja a <a href="${CONFIG.privacidadeUrl}">Política de privacidade</a>.</span>
+      </label>
+    </form>`;
+  const em=document.getElementById('em'), wa=document.getElementById('wa'), ok=document.getElementById('ok'), err=document.getElementById('err');
+  wa.oninput=()=>{ let d=wa.value.replace(/\D/g,'').slice(0,11); wa.value = d.length>6 ? `(${d.slice(0,2)}) ${d.slice(2,d.length-4)}-${d.slice(-4)}` : d.length>2 ? `(${d.slice(0,2)}) ${d.slice(2)}` : d; };
+  const submit=async e=>{
+    e && e.preventDefault();
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em.value.trim())){ err.textContent='Digite um e-mail válido, como nome@gmail.com.'; em.focus(); return; }
+    if(!ok.checked){ err.textContent='Marque a caixa para receber o plano.'; return; }
+    err.textContent='';
+    const lead={email:em.value.trim(), whatsapp:wa.value.replace(/\D/g,''), respostas:A, utm:UTM, criadoEm:new Date().toISOString()};
+    fbStd('Lead'); track('lead_submit');
+    if(CONFIG.webhookUrl){ try{ await fetch(CONFIG.webhookUrl,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({_subject:'Novo lead do quiz: '+(A.nome||'sem nome'), _template:'table', _captcha:'false', email:lead.email, whatsapp:lead.whatsapp||'-', cachorro:A.nome||'-', respostas:JSON.stringify(A), utm:JSON.stringify(UTM), data:lead.criadoEm})}); }catch(x){} }
+    showSales();
+  };
+  document.getElementById('lf').onsubmit=submit;
+  $screen.appendChild(footer('Ver meu plano', true, submit).f);
+}
+
+/* =====================================================================
+   Página de vendas personalizada
+   ===================================================================== */
+function checkoutHref(){
+  try{ const u=new URL(CONFIG.checkoutUrl); Object.entries(UTM).forEach(([k,v])=>u.searchParams.set(k,v)); if(A.data) u.searchParams.set('src','quiz'); return u.toString(); }catch(e){ return CONFIG.checkoutUrl; }
+}
+function showSales(){
+  const P = plan();
+  const N = nome();
+  const nm = N || (fem()?'sua cachorra':'seu cachorro');
+  const ctaTxt = N ? 'Quero o plano '+(fem()?'da ':'do ')+N : 'Quero o plano';
+  const href = checkoutHref();
+  const now = P.ps.length ? P.ps.slice(0,5) : ['Ignora quando você chama','Não respeita limites da casa'];
+  const thenMap = {'Faz fora do lugar':'Xixi e cocô no lugar combinado','Não segura à noite':'Noites inteiras sem acidente','Faz quando fica sozinho':'Casa limpa quando você chega','Morde mãos e pés':'Brincadeira sem dentes na pele','Late demais':'Casa mais silenciosa','Destrói móveis e objetos':'Móveis inteiros, brinquedo certo','Chora quando fica sozinho':'Fica tranquilo(a) quando você sai','Pula nas visitas':'Visitas recebidas com calma','Puxa a guia':'Passeio com a guia frouxa','Come coisas do chão':'Larga quando você pede','Late para outros cães':'Passa por outros cães com calma','Late para pessoas':'Ignora quem passa na rua','Ainda não passeia':'Passeios sem medo','Ignora quando você chama':'Vem quando é chamado','Não respeita limites da casa':'Sabe as regras da casa'};
+  const weeks = [{w:'Semana 1', name:'Rotina, vínculo e base', d:'Horários, recompensas e os primeiros comandos.'}].concat(P.mods.slice(0,3).map((m,i)=>({w:'Semana '+(i+2), name:m.name, d:fill(m.d), focus:true})));
+  const extras = P.mods.slice(3);
+  const dep = CONFIG.depoimentos.length
+    ? CONFIG.depoimentos.map(d=>`<div class="test"><p>“${esc(d.texto)}”</p><small>${esc(d.autor)}</small></div>`).join('')
+    : `<div class="placeholder">Espaço para depoimentos reais de alunos (com autorização). Preencha <b>CONFIG.depoimentos</b> no código. Prints de WhatsApp e vídeos curtos de antes e depois convertem bem no Brasil.</div>`;
+  const w = weeksUntil(A.data);
+  const prazo = A.data && w!==null && w>=1 ? `<p class="small-note">O plano cabe nas ${w} semana${w>1?'s':''} até ${fmtDate(A.data)}${A.evento?' ('+esc(A.evento.toLowerCase())+')':''}.</p>` : '';
+  const S = document.getElementById('sales');
+  S.innerHTML = `
+  <div class="s-wrap">
+    <div class="s-top"><svg viewBox="0 0 32 32" aria-hidden="true"><use href="#paw"/></svg>${esc(CONFIG.marca)}</div>
+    <div class="hero">
+      ${tagHTML()}
+      <h1>${esc(fill('O plano {donome} está pronto'))}</h1>
+      <p class="lead">${esc(fill('Um passo a passo de 10 minutos por dia, montado com as suas respostas, para você treinar {onome} em casa.'))}</p>
+      ${CONFIG.alunos?`<p class="small-note">Mais de ${esc(CONFIG.alunos)} tutores já treinam com o ${esc(CONFIG.produto)}.</p>`:''}
+      <a class="cta" id="heroCta" href="${esc(href)}">${esc(ctaTxt)}</a>
+      ${prazo}
+    </div>
+  </div>
+
+  <section class="block"><div class="s-wrap">
+    <h2>${esc(fill('Do jeito que está para o jeito que você quer'))}</h2>
+    <p class="intro-p">Montamos o plano a partir do que você marcou no teste.</p>
+    <div class="ba">
+      <div class="now"><h3>Hoje</h3><ul>${now.map(p=>`<li>${esc(p)}</li>`).join('')}</ul></div>
+      <div class="then"><h3>Com o plano</h3><ul>${now.map(p=>`<li>${esc(fill(thenMap[p]||'Comportamento resolvido'))}</li>`).join('')}</ul></div>
+    </div>
+    ${profileHTML(P)}
+  </div></section>
+
+  <section class="block"><div class="s-wrap">
+    <h2>Seu plano, semana a semana</h2>
+    <p class="intro-p">${esc(fill('A ordem foi escolhida pelos problemas que mais atrapalham a rotina {donome}.'))}</p>
+    <div class="mods">${weeks.map(m=>`<div class="mod ${m.focus?'focus':''}"><span class="wk">${m.w}</span><div><b>${esc(m.name)}</b><em>${esc(m.d)}</em></div></div>`).join('')}</div>
+    ${extras.length?`<p class="intro-p" style="margin-top:14px">Também incluído: ${esc(extras.map(m=>m.name).join(', '))}.</p>`:''}
+    <div class="bonus"><b>Bônus incluídos</b><ul>
+      <li>Guia de brincadeiras para gastar energia dentro de casa</li>
+      <li>Checklist da rotina ideal por idade</li>
+      ${CONFIG.suporteEmail?'<li>Suporte por e-mail para tirar dúvidas</li>':''}
+    </ul></div>
+  </div></section>
+
+  <section class="block"><div class="s-wrap">
+    <h2>Como funciona</h2>
+    <ol class="steps">
+      <li><div><b>Abra o exercício do dia</b><span>No celular ou no computador, com o passo a passo ilustrado do início ao fim.</span></div></li>
+      <li><div><b>${esc(fill('Pratique com {onome}'))}</b><span>10 minutos em casa, com petiscos e o que você já tem.</span></div></li>
+      <li><div><b>Marque o avanço</b><span>Quando o exercício estiver firme, você passa para o próximo.</span></div></li>
+    </ol>
+  </div></section>
+
+  ${CONFIG.depoimentos.length?`<section class="block"><div class="s-wrap">
+    <h2>Quem já treinou</h2>
+    <div class="tests">${dep}</div>
+  </div></section>`:''}
+
+  <section class="block" id="oferta"><div class="s-wrap">
+    <h2>${esc(fill('Comece hoje o plano {donome}'))}</h2>
+    <div class="offer">
+      <h3>${esc(CONFIG.produto)}</h3>
+      ${CONFIG.precoDe?`<div class="from">de ${esc(CONFIG.precoDe)}</div>`:''}
+      <div class="price">${esc(CONFIG.preco)}</div>
+      <div class="inst">${esc(CONFIG.parcelado)}</div>
+      <ul>
+        <li>${esc(fill('Plano de 4 semanas personalizado para {onome}'))}</li>
+        <li>Guia ilustrado para ler no celular ou no computador</li>
+        <li>Acesso imediato depois do pagamento</li>
+        <li>Pagamento único: sem assinatura e sem mensalidade</li>
+        <li>Bônus de rotina e brincadeiras${CONFIG.suporteEmail?' + suporte por e-mail':''}</li>
+      </ul>
+      <a class="cta" href="${esc(href)}">${esc(ctaTxt)}</a>
+      <div class="pay"><span>Pix</span><span>Cartão de crédito</span></div>
+    </div>
+    <div class="guarantee">
+      <div class="seal"><div><strong>${CONFIG.garantiaDias}</strong>dias de garantia</div></div>
+      <div><b style="font-family:'Poppins',system-ui,sans-serif;font-size:21px">Teste sem risco</b><p style="margin:6px 0 0;color:var(--muted)">Se em ${CONFIG.garantiaDias} dias você achar que o método não é para você, peça o reembolso pela plataforma e recebe 100% do valor de volta.</p></div>
+    </div>
+  </div></section>
+
+  <section class="block"><div class="s-wrap">
+    <h2>Perguntas frequentes</h2>
+    <div class="faq">
+      <details><summary>Funciona para filhote?</summary><p>Sim. Para filhotes o plano começa por rotina, xixi no lugar certo e mordidas, respeitando a fase de vacinas antes dos passeios.</p></details>
+      <details><summary>E para cachorro adulto ou idoso?</summary><p>Sim. Cachorro aprende em qualquer idade. Para idosos ou com problema nas articulações, os exercícios são adaptados para não forçar o corpo.</p></details>
+      <details><summary>Quanto tempo por dia preciso?</summary><p>Cerca de 10 minutos. Sessões curtas e frequentes funcionam melhor do que uma sessão longa por semana.</p></details>
+      <details><summary>É assinatura? Vou pagar todo mês?</summary><p>Não. Você paga ${esc(CONFIG.preco)} uma única vez e o material é seu. Não existe cobrança mensal.</p></details>
+      <details><summary>Como recebo o acesso?</summary><p>Logo depois do pagamento você recebe o acesso no e-mail. No Pix e no cartão a liberação é imediata. O material fica na área de membros, para ler no celular ou no computador.</p></details>
+      <details><summary>Preciso comprar algum material?</summary><p>Não. Você usa guia, coleira, petiscos e brinquedos que provavelmente já tem.</p></details>
+      <details><summary>Usa castigo ou enforcador?</summary><p>Não. O método é baseado em reforço positivo: ensinar o que fazer e recompensar quando acontece.</p></details>
+      <details><summary>E se eu não gostar?</summary><p>Você tem ${CONFIG.garantiaDias} dias de garantia. É só pedir o reembolso pela plataforma de pagamento.</p></details>
+    </div>
+  </div></section>
+
+  <div class="s-wrap final">
+    ${tagHTML()}
+    <h2>${esc(fill('{Onome} pode começar hoje'))}</h2>
+    <a class="cta" href="${esc(href)}">${esc(ctaTxt)}</a>
+  </div>
+  <footer>${esc(CONFIG.marca)} · <a href="${CONFIG.termosUrl}">Termos</a> · <a href="${CONFIG.privacidadeUrl}">Privacidade</a><br>Resultados variam de acordo com a rotina, a idade e o histórico de cada cachorro. Problemas de agressividade ou ansiedade severa devem ser avaliados por um médico-veterinário ou adestrador presencial.</footer>`;
+  document.body.classList.add('selling');
+  const sc=document.getElementById('stickyCta'); sc.href=href; sc.textContent=ctaTxt;
+  document.querySelectorAll('.sales a.cta, #stickyCta').forEach(a=>a.addEventListener('click',()=>{ fbStd('InitiateCheckout'); track('checkout_click'); }));
+  const sticky=document.getElementById('sticky'), heroCta=document.getElementById('heroCta');
+  try{ new IntersectionObserver(([e])=>sticky.classList.toggle('show', !e.isIntersecting && e.boundingClientRect.top<0)).observe(heroCta); }catch(e){ sticky.classList.add('show'); }
+  window.scrollTo(0,0);
+  fbStd('ViewContent'); track('sales_view');
+}
+
+/* =====================================================================
+   Ilustrações (SVG simples, troque pelas suas)
+   ===================================================================== */
+function artDog(){ return `<svg viewBox="0 0 220 200" width="100%" height="100%" aria-hidden="true">
+  <ellipse cx="110" cy="186" rx="78" ry="9" fill="#D3E0D6"/>
+  <path d="M60 175c0-40 20-62 50-62s50 22 50 62z" fill="#C98B52"/>
+  <path d="M88 175c2-26 10-36 22-36s20 10 22 36z" fill="#F3DCC0"/>
+  <circle cx="110" cy="82" r="46" fill="#C98B52"/>
+  <path d="M68 52c-14 2-22 30-14 50 10-6 18-20 22-38z" fill="#7A4E2A"/>
+  <path d="M152 52c14 2 22 30 14 50-10-6-18-20-22-38z" fill="#7A4E2A"/>
+  <ellipse cx="110" cy="100" rx="26" ry="20" fill="#F3DCC0"/>
+  <circle cx="94" cy="78" r="5" fill="#16302B"/><circle cx="126" cy="78" r="5" fill="#16302B"/>
+  <ellipse cx="110" cy="93" rx="8" ry="6" fill="#16302B"/>
+  <path d="M101 104q9 8 18 0" stroke="#16302B" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M84 126q26 10 52 0" stroke="#2E7D57" stroke-width="8" fill="none" stroke-linecap="round"/>
+  <path d="M110 132l-10 14q10 12 20 0z" fill="#FFC83D"/>
+</svg>`; }
+function artClock(){ return `<svg viewBox="0 0 180 180" width="100%" height="100%" aria-hidden="true"><circle cx="90" cy="90" r="72" fill="#fff"/><circle cx="90" cy="90" r="72" fill="none" stroke="#2E7D57" stroke-width="8"/><path d="M90 90V38A52 52 0 0 1 135 64z" fill="#FFC83D"/><path d="M90 90V44M90 90l26 16" stroke="#16302B" stroke-width="6" stroke-linecap="round"/><circle cx="90" cy="90" r="7" fill="#16302B"/></svg>`; }
+function artHeart(){ return `<svg viewBox="0 0 180 180" width="100%" height="100%" aria-hidden="true"><circle cx="90" cy="90" r="80" fill="#E1F0E6"/><path d="M90 140s-48-28-48-62c0-16 12-28 27-28 10 0 17 6 21 13 4-7 11-13 21-13 15 0 27 12 27 28 0 34-48 62-48 62z" fill="#D9503A"/><use href="#paw" x="70" y="70" width="40" height="40"/></svg>`; }
+
+document.querySelectorAll('.brand-name').forEach(e=>e.textContent=CONFIG.marca);
+render();
+</script>
+</body>
+</html>
